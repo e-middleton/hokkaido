@@ -11,8 +11,8 @@ from clawpack.visclaw import animation_tools
 import os
 from IPython.display import HTML
 
-os.environ['CLAW'] = '/Users/anitamiddleton/Documents/python/clawpack/clawpack_src/clawpack'
-os.environ['FC'] = 'gfortran'
+# os.environ['CLAW'] = '/Users/emiddleton/Documents/python/clawpack/clawpack_src/clawpack'
+# os.environ['FC'] = 'gfortran'
 
 try:
     CLAW = os.environ['CLAW']
@@ -22,23 +22,27 @@ except:
 #file directory
 dir = os.path.join(CLAW, 'geoclaw/examples/hokkaido/')
 
-fault_geometry_file = os.path.join(dir + 'ishikari_fault.csv')
+fault_geometry_file = os.path.join(dir + 'tok_coords.csv')
 ishikari = np.loadtxt(fault_geometry_file, delimiter=",", skiprows=1) #path, comma separated values, first row is a header
-ishikari[:,[3,6,9,12]] = 1e3*abs(ishikari[:,[3,6,9,12]]) #array slicing accesses depth element, changing it to be positive meters
+# ishikari[:,[3,6,9,12]] = 1e3*abs(ishikari[:,[3,6,9,12]]) #array slicing accesses depth element, changing it to be positive meters
+ishikari[:,[2,5,8]] = 1e3*abs(ishikari[:,[2,5,8]]) #array slicing accesses depth element, changing it to be positive meters
 
 fault0 = dtopotools.Fault() #create object
 fault0.subfaults = [] #initialize empty list
 
 nsubfaults = ishikari.shape[0]
 
+# node1 = ishikari[j,4:7].tolist() #lon,lat,depth of the first node in each triangle
+	# node2 = ishikari[j,7:10].tolist()
+	# node3 = ishikari[j,10:13].tolist()
 for j in range(nsubfaults):
-	subfault0 = dtopotools.SubFault() #create new object
-	node1 = ishikari[j,4:7].tolist() #lon,lat,depth of the first node in each triangle
-	node2 = ishikari[j,7:10].tolist()
-	node3 = ishikari[j,10:13].tolist()
-	node_list = [node1,node2,node3]
-	subfault0.set_corners(node_list,projection_zone='10')
-	fault0.subfaults.append(subfault0)
+    subfault0 = dtopotools.SubFault() #create new object
+    node1 = ishikari[j,0:3].tolist() #lon,lat,depth of the first node in each triangle
+    node2 = ishikari[j,3:6].tolist()
+    node3 = ishikari[j,6:9].tolist()
+    node_list = [node1,node2,node3]
+    subfault0.set_corners(node_list,projection_zone='10')
+    fault0.subfaults.append(subfault0)
 
 #copied from CSZ_example.ipynb
 fig = plt.figure(figsize=(15,10))
