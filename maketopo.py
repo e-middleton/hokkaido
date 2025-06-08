@@ -17,7 +17,7 @@ import numpy as np
 import clawpack.clawutil.data
 
 # set up environment variables
-os.environ['CLAW'] = '/Users/anitamiddleton/Documents/python/clawpack/clawpack_src/clawpack'
+os.environ['CLAW'] = '/Users/emiddleton/Documents/python/clawpack/clawpack_src/clawpack'
 os.environ['FC'] = 'gfortran'
 
 try:
@@ -35,7 +35,7 @@ def get_topo(makeplots=True):
     from clawpack.geoclaw import topotools
 
     # topography file
-    topo_fname = 'gebco_2024_n47.0_s34.5_w135.0_e152.0.asc'
+    topo_fname = 'gebco_2024_n47.0_s35.0_w135.0_e152.0.asc'
     # put the header in the correct formatting and write the file for topotype3
     topotools.swapheader(topo_fname, 'hokkaido.tt3') 
     topo_fname = 'hokkaido.tt3'
