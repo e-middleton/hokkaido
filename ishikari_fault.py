@@ -59,6 +59,7 @@ rupture_file = os.path.join(dir + 'rupt_param.csv')
 ishikari = np.loadtxt(fault_geometry_file, delimiter=",", skiprows=1) #path, comma separated values, first row is a header
 # ishikari[:,[3,6,9,12]] = 1e3*abs(ishikari[:,[3,6,9,12]]) #array slicing accesses depth element, changing it to be positive meters
 ishikari[:,[2,5,8]] = 1e3*abs(ishikari[:,[2,5,8]]) #array slicing accesses depth element, changing it to be positive meters
+rupture_parameters = np.loadtxt(rupture_file, delimiter=",")
 
 fault0 = dtopotools.Fault() #create object
 fault0.subfaults = [] #initialize empty list
@@ -71,6 +72,8 @@ for j in range(nsubfaults):
     node2 = ishikari[j,3:6].tolist()
     node3 = ishikari[j,6:9].tolist()
     node_list = [node1,node2,node3]
+    subfault0.slip = rupture_parameters[j,0]
+    subfault0.rake = ishikari[j,9]
     subfault0.set_corners(node_list,projection_zone='10')
     fault0.subfaults.append(subfault0)
 
@@ -99,5 +102,5 @@ x = np.linspace(xlower,xupper,mx)
 y = np.linspace(ylower,yupper,my)
 
 dtopo = fault0.create_dtopography(x,y,times=[1.], verbose=False)
-dtopo_fname = ('/Users/anitamiddleton/Documents/python/clawpack/clawpack_src/clawpack/geoclaw/examples/hokkaido/ishikari.tt3')
+dtopo_fname = ('/Users/emiddleton/Documents/python/clawpack/clawpack_src/clawpack/geoclaw/examples/hokkaido/ishikari.tt3')
 dtopo.write(dtopo_fname, dtopo_type=3)
