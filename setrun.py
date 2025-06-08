@@ -77,7 +77,7 @@ def setrun(claw_pkg='geoclaw'):
     clawdata.lower[0] = 136.0      # west longitude
     clawdata.upper[0] = 150.0       # east longitude
 
-    clawdata.lower[1] = 35.0       # south latitude
+    clawdata.lower[1] = 35.5       # south latitude
     clawdata.upper[1] = 46.0         # north latitude
 
 
@@ -124,12 +124,12 @@ def setrun(claw_pkg='geoclaw'):
     # Note that the time integration stops after the final output time.
     # The solution at initial time t0 is always written in addition.
 
-    clawdata.output_style = 2
+    clawdata.output_style = 1
 
     if clawdata.output_style==1:
         # Output nout frames at equally spaced times up to tfinal:
         clawdata.num_output_times = 18
-        clawdata.tfinal = 9*3600.
+        clawdata.tfinal = 3*3600.
         clawdata.output_t0 = True  # output at initial (or restart) time?
 
     elif clawdata.output_style == 2:
@@ -399,7 +399,7 @@ def setgeo(rundata):
     topo_data = rundata.topo_data
     # for topography, append lines of the form
     #    [topotype, fname]
-    topo_path = os.path.join(dir, 'gebco_2024_n47.0_s34.5_w135.0_e152.0.asc')
+    topo_path = os.path.join(dir, 'gebco_2024_n47.0_s35.0_w135.0_e152.0.asc')
     topo_data.topofiles.append([3, topo_path])
 
     # == setdtopo.data values ==
