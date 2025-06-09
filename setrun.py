@@ -75,10 +75,10 @@ def setrun(claw_pkg='geoclaw'):
 
     # Lower and upper edge of computational domain:
     clawdata.lower[0] = 136.0      # west longitude
-    clawdata.upper[0] = 150.0       # east longitude
+    clawdata.upper[0] = 150.0      # east longitude
 
-    clawdata.lower[1] = 35.5       # south latitude
-    clawdata.upper[1] = 46.0         # north latitude
+    clawdata.lower[1] = 38       # south latitude
+    clawdata.upper[1] = 46.0       # north latitude
 
 
 
@@ -128,8 +128,8 @@ def setrun(claw_pkg='geoclaw'):
 
     if clawdata.output_style==1:
         # Output nout frames at equally spaced times up to tfinal:
-        clawdata.num_output_times = 18
-        clawdata.tfinal = 3*3600.
+        clawdata.num_output_times = 24
+        clawdata.tfinal = 4*3600.
         clawdata.output_t0 = True  # output at initial (or restart) time?
 
     elif clawdata.output_style == 2:
@@ -346,14 +346,15 @@ def setrun(claw_pkg='geoclaw'):
     if 1:
         rundata.regiondata.regions.append([1, 1, 0., 1e9, -180,180,-90,90])
         rundata.regiondata.regions.append([1, 3, 0., 1e9, 141, 146, 41, 43])
-        rundata.regiondata.regions.append([3, 3, 0., 1e9, 141.5, 144, 41, 43])
+        #rundata.regiondata.regions.append([3, 3, 0., 1e9, 142, 144, 41, 43])
 
     # ---------------
     # Gauges:
     # ---------------
     rundata.gaugedata.gauges = []
     # # for gauges append lines of the form  [gaugeno, x, y, t1, t2]
-    # rundata.gaugedata.gauges.append([32412, -86.392, -17.975, 0., 1.e10])
+    rundata.gaugedata.gauges.append([129, 142.755637, 42.158995, 0., 1.e10])
+    rundata.gaugedata.gauges.append([111, 144.897712, 42.988294, 0., 1.e10])
     
 
     return rundata
@@ -393,20 +394,20 @@ def setgeo(rundata):
     # Refinement settings
     refinement_data = rundata.refinement_data
     refinement_data.variable_dt_refinement_ratios = True
-    refinement_data.wave_tolerance = 1.e-1
+    refinement_data.wave_tolerance = 0.1
 
     # == settopo.data values ==
     topo_data = rundata.topo_data
     # for topography, append lines of the form
     #    [topotype, fname]
-    topo_path = os.path.join(dir, 'gebco_2024_n47.0_s35.0_w135.0_e152.0.asc')
+    topo_path = os.path.join(dir, 'gebco_2024_n47.0_s34.5_w135.0_e152.0.asc')
     topo_data.topofiles.append([3, topo_path])
 
     # == setdtopo.data values ==
     dtopo_data = rundata.dtopo_data
     # for moving topography, append lines of the form :   (<= 1 allowed for now!)
     #   [topotype, fname]
-    dtopo_path = os.path.join(dir, 'ishikari.tt3')
+    dtopo_path = os.path.join(dir, 'tok_dtopo.tt3')
     dtopo_data.dtopofiles.append([3,dtopo_path])
     dtopo_data.dt_max_dtopo = 0.2
 
@@ -438,3 +439,4 @@ if __name__ == '__main__':
     rundata.write()
 
     kmltools.make_input_data_kmls(rundata)
+
