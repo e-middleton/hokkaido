@@ -74,17 +74,17 @@ def setrun(claw_pkg='geoclaw'):
     clawdata.num_dim = num_dim
 
     # Lower and upper edge of computational domain:
-    clawdata.lower[0] = 136.0      # west longitude
-    clawdata.upper[0] = 150.0      # east longitude
+    clawdata.lower[0] = 140.0      # west longitude
+    clawdata.upper[0] = 148.0      # east longitude
 
-    clawdata.lower[1] = 38       # south latitude
+    clawdata.lower[1] = 38         # south latitude
     clawdata.upper[1] = 46.0       # north latitude
 
 
 
     # Number of grid cells: Coarsest grid
-    clawdata.num_cells[0] = 30
-    clawdata.num_cells[1] = 30
+    clawdata.num_cells[0] = 30 # mx
+    clawdata.num_cells[1] = 30 # my
 
     # ---------------
     # Size of system:
@@ -158,7 +158,7 @@ def setrun(claw_pkg='geoclaw'):
     # The current t, dt, and cfl will be printed every time step
     # at AMR levels <= verbosity.  Set verbosity = 0 for no printing.
     #   (E.g. verbosity == 2 means print only on levels 1 and 2.)
-    clawdata.verbosity = 1
+    clawdata.verbosity = 0
 
 
 
@@ -254,7 +254,7 @@ def setrun(claw_pkg='geoclaw'):
     # Specify when checkpoint files should be created that can be
     # used to restart a computation.
 
-    clawdata.checkpt_style = -4
+    clawdata.checkpt_style = 1
 
     if clawdata.checkpt_style == 0:
         # Do not checkpoint at all
@@ -308,7 +308,7 @@ def setrun(claw_pkg='geoclaw'):
     amrdata.flag2refine = True
 
     # steps to take on each level L between regriddings of level L+1:
-    amrdata.regrid_interval = 3
+    amrdata.regrid_interval = 2 # originally 3 in chile example
 
     # width of buffer zone around flagged points:
     # (typically the same as regrid_interval so waves don't escape):
@@ -330,7 +330,7 @@ def setrun(claw_pkg='geoclaw'):
     amrdata.nprint = False      # proper nesting output
     amrdata.pprint = False      # proj. of tagged points
     amrdata.rprint = False      # print regridding summary
-    amrdata.sprint = False      # space/memory output
+    amrdata.sprint = True      # space/memory output
     amrdata.tprint = True       # time step reporting each level
     amrdata.uprint = False      # update/upbnd reporting
     
@@ -353,8 +353,8 @@ def setrun(claw_pkg='geoclaw'):
     # ---------------
     rundata.gaugedata.gauges = []
     # # for gauges append lines of the form  [gaugeno, x, y, t1, t2]
-    rundata.gaugedata.gauges.append([129, 142.755637, 42.158995, 0., 1.e10])
-    rundata.gaugedata.gauges.append([111, 144.897712, 42.988294, 0., 1.e10])
+    rundata.gaugedata.gauges.append([129, 142.755637, 42.158995, 0., 1.e10]) # urakawa
+    rundata.gaugedata.gauges.append([111, 144.897712, 42.988294, 0., 1.e10]) # mabiro
     
 
     return rundata
@@ -394,13 +394,13 @@ def setgeo(rundata):
     # Refinement settings
     refinement_data = rundata.refinement_data
     refinement_data.variable_dt_refinement_ratios = True
-    refinement_data.wave_tolerance = 0.1
+    refinement_data.wave_tolerance = 0.02
 
     # == settopo.data values ==
     topo_data = rundata.topo_data
     # for topography, append lines of the form
     #    [topotype, fname]
-    topo_path = os.path.join(dir, 'gebco_2024_n47.0_s34.5_w135.0_e152.0.asc')
+    topo_path = os.path.join(dir, 'curr_topo.tt3')
     topo_data.topofiles.append([3, topo_path])
 
     # == setdtopo.data values ==
@@ -438,5 +438,5 @@ if __name__ == '__main__':
     rundata = setrun(*sys.argv[1:])
     rundata.write()
 
-    kmltools.make_input_data_kmls(rundata)
-
+    # I don't use the kml files
+    # kmltools.make_input_data_kmls(rundata) 
