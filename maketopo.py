@@ -17,7 +17,7 @@ import numpy as np
 import clawpack.clawutil.data
 
 # set up environment variables
-os.environ['CLAW'] = '/Users/emiddleton/Documents/python/clawpack/clawpack_src/clawpack'
+os.environ['CLAW'] = '/Users/anitamiddleton/Documents/python/clawpack/clawpack_src/clawpack'
 os.environ['FC'] = 'gfortran'
 
 try:
@@ -29,16 +29,17 @@ except:
 dir = os.path.join(CLAW, 'geoclaw/examples/hokkaido')
 
 def get_topo(makeplots=False):
-
+    """
+    Retrieve the topo file from the GeoClaw repository.
+    """
     from clawpack.geoclaw import topotools
 
     # topography file
-    # topo_fname = os.path.join(dir, 'topo_wide.asc')
-    # # put the header in the correct formatting and write the file for topotype3
+    topo_fname = os.path.join(dir, 'gebco_2024_n47.0_s34.5_w135.0_e152.0.asc')
     # #output file needed to be joined to the directory, otherwise was put in different directory
-    # topotools.swapheader(topo_fname, os.path.join(dir, 'tok_topo.tt3')) 
-    topo_fname = 'tok_topo_coarse.tt3'
-
+    topotools.swapheader(topo_fname, os.path.join(dir, 'curr_topo.tt3')) 
+  
+    topo_fname = 'curr_topo.tt3'
     topo_path = os.path.join(dir, topo_fname)
     topo = topotools.Topography(topo_path, topo_type=3)
     print("The extent of the data in longitude and latitude: ")
@@ -71,7 +72,7 @@ def make_dtopo(makeplots=False):
 
     fault_mesh = np.loadtxt(fault_geometry_file, delimiter=",", skiprows=1) #path, comma separated values, first row is a header
     fault_mesh[:,[2,5,8]] = 1e3*abs(fault_mesh[:,[2,5,8]]) #array slicing accesses depth element, changing it to be positive meters
-    rupture_parameters = np.loadtxt(rupture_file, delimiter=",")
+    rupture_parameters = np.loadtxt(rupture_file, delimiter=",", skiprows=1) # skip header
 
     ### FOR A STATIC, SINGLE TIME RUPTURE ###
     if 0:
@@ -150,7 +151,9 @@ def make_dtopo(makeplots=False):
         else:
             print("Using Okada model to create dtopo file")
             
-            x,y = fault0.create_dtopo_xy(dx = 4/60.) #what is dx?
+            points_per_degree = 60  # 1 minute resolution
+            dx = 1./points_per_degree
+            x,y = fault0.create_dtopo_xy(dx)
             print('Will create dtopo on arrays of shape %i by %i' % (len(x),len(y)))
             tfinal = max([subfault1.rupture_time + subfault1.rise_time for subfault1 in fault0.subfaults])
             times0 = np.linspace(0.,tfinal,100)
