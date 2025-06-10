@@ -47,7 +47,7 @@ def setplot(plotdata=None):
     
     def fixup(current_data):
         import pylab
-        # addgauges(current_data)
+        addgauges(current_data)
         t = current_data.t
         t = t / 3600.  # hours
         pylab.title('Surface at %4.2f hours' % t, fontsize=15)
@@ -77,7 +77,7 @@ def setplot(plotdata=None):
     # plotaxes.xlabel = 'longitude'
     # plotaxes.ylabel = 'latitude'
 
-    #plotaxes.afteraxes = addgauges
+    plotaxes.afteraxes = addgauges
 
     # Water
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
@@ -163,7 +163,7 @@ def setplot(plotdata=None):
     plotaxes = plotfigure.new_plotaxes()
     plotaxes.time_scale = 1/3600.  # convert to hours
     plotaxes.xlimits = [0, 9]
-    plotaxes.ylimits = [-0.3, 0.3]
+    plotaxes.ylimits = [-3, 3]
     plotaxes.title = 'Surface'
     plotaxes.title_fontsize = 15
     plotaxes.time_label = 'time (hours)'
