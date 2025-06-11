@@ -128,7 +128,7 @@ def setrun(claw_pkg='geoclaw'):
 
     if clawdata.output_style==1:
         # Output nout frames at equally spaced times up to tfinal:
-        clawdata.num_output_times = 24
+        clawdata.num_output_times = 24 # every 10 minutes
         clawdata.tfinal = 4*3600.
         clawdata.output_t0 = True  # output at initial (or restart) time?
 
@@ -158,7 +158,7 @@ def setrun(claw_pkg='geoclaw'):
     # The current t, dt, and cfl will be printed every time step
     # at AMR levels <= verbosity.  Set verbosity = 0 for no printing.
     #   (E.g. verbosity == 2 means print only on levels 1 and 2.)
-    clawdata.verbosity = 0
+    clawdata.verbosity = 1
 
 
 
@@ -172,7 +172,7 @@ def setrun(claw_pkg='geoclaw'):
 
     # Initial time step for variable dt.
     # If dt_variable==0 then dt=dt_initial for all steps:
-    clawdata.dt_initial = 0.2
+    clawdata.dt_initial = 0.02
 
     # Max time step to be allowed if variable dt used:
     clawdata.dt_max = 1e+99
@@ -254,7 +254,7 @@ def setrun(claw_pkg='geoclaw'):
     # Specify when checkpoint files should be created that can be
     # used to restart a computation.
 
-    clawdata.checkpt_style = 1
+    clawdata.checkpt_style = 0
 
     if clawdata.checkpt_style == 0:
         # Do not checkpoint at all
@@ -290,9 +290,9 @@ def setrun(claw_pkg='geoclaw'):
     amrdata.amr_levels_max = 3
 
     # List of refinement ratios at each level (length at least mxnest-1)
-    amrdata.refinement_ratios_x = [4,6]
-    amrdata.refinement_ratios_y = [4,6]
-    amrdata.refinement_ratios_t = [4,6]
+    amrdata.refinement_ratios_x = [6,8]
+    amrdata.refinement_ratios_y = [6,8]
+    amrdata.refinement_ratios_t = [6,8]
 
 
     # Specify type of each aux variable in amrdata.auxtype.
@@ -306,9 +306,11 @@ def setrun(claw_pkg='geoclaw'):
     amrdata.flag_richardson = False    # use Richardson?
     amrdata.flag_richardson_tol = 0.002  # Richardson tolerance
     amrdata.flag2refine = True
+    # Note: in geoclaw the refinement tolerance is set as wave_tolerance below
+    # and flag2refine_tol is unused!
 
     # steps to take on each level L between regriddings of level L+1:
-    amrdata.regrid_interval = 2 # originally 3 in chile example
+    amrdata.regrid_interval = 3
 
     # width of buffer zone around flagged points:
     # (typically the same as regrid_interval so waves don't escape):
@@ -319,7 +321,7 @@ def setrun(claw_pkg='geoclaw'):
     amrdata.clustering_cutoff = 0.700000
 
     # print info about each regridding up to this level:
-    amrdata.verbosity_regrid = 0  
+    amrdata.verbosity_regrid = 1  
 
     #  ----- For developers ----- 
     # Toggle debugging print statements:
@@ -330,8 +332,8 @@ def setrun(claw_pkg='geoclaw'):
     amrdata.nprint = False      # proper nesting output
     amrdata.pprint = False      # proj. of tagged points
     amrdata.rprint = False      # print regridding summary
-    amrdata.sprint = True      # space/memory output
-    amrdata.tprint = True       # time step reporting each level
+    amrdata.sprint = False      # space/memory output
+    amrdata.tprint = False       # time step reporting each level
     amrdata.uprint = False      # update/upbnd reporting
     
     # More AMR parameters can be set -- see the defaults in pyclaw/data.py
@@ -346,6 +348,8 @@ def setrun(claw_pkg='geoclaw'):
     if 1:
         rundata.regiondata.regions.append([1, 1, 0., 1e9, -180,180,-90,90])
         rundata.regiondata.regions.append([1, 3, 0., 1e9, 141, 146, 41, 43])
+        rundata.regiondata.regions.append([3, 3, 0., 1e9, 142, 144, 41.5, 42.5])
+        rundata.regiondata.regions.append([3, 3, 0., 1e9, 144.5, 145.5, 42.5, 43.5])
         #rundata.regiondata.regions.append([3, 3, 0., 1e9, 142, 144, 41, 43])
 
     # ---------------
@@ -353,8 +357,8 @@ def setrun(claw_pkg='geoclaw'):
     # ---------------
     rundata.gaugedata.gauges = []
     # # for gauges append lines of the form  [gaugeno, x, y, t1, t2]
-    rundata.gaugedata.gauges.append([129, 142.755637, 42.158995, 0., 1.e10]) # urakawa
-    rundata.gaugedata.gauges.append([111, 144.897712, 42.988294, 0., 1.e10]) # mabiro
+    rundata.gaugedata.gauges.append([129, 142.755637, 42.148995, 0., 1.e10]) # urakawa
+    rundata.gaugedata.gauges.append([111, 144.897712, 42.978294, 0., 1.e10]) # mabiro
     
 
     return rundata
@@ -378,11 +382,11 @@ def setgeo(rundata):
        
     # == Physics ==
     geo_data.gravity = 9.81
-    geo_data.coordinate_system = 2
+    geo_data.coordinate_system = 2 # for lat-lon
     geo_data.earth_radius = 6367.5e3
 
     # == Forcing Options
-    geo_data.coriolis_forcing = False
+    geo_data.coriolis_forcing = False # docs said this was usually fine for tsunami simulations
 
     # == Algorithm and Initial Conditions ==
     geo_data.sea_level = 0.0
@@ -400,7 +404,7 @@ def setgeo(rundata):
     topo_data = rundata.topo_data
     # for topography, append lines of the form
     #    [topotype, fname]
-    topo_path = os.path.join(dir, 'curr_topo.tt3')
+    topo_path = os.path.join(dir, 'new_topo.tt3')
     topo_data.topofiles.append([3, topo_path])
 
     # == setdtopo.data values ==
