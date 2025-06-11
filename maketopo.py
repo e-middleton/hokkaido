@@ -35,11 +35,12 @@ def get_topo(makeplots=False):
     from clawpack.geoclaw import topotools
 
     # topography file
-    topo_fname = os.path.join(dir, 'gebco_2024_n47.0_s34.5_w135.0_e152.0.asc')
+    #topo_fname = os.path.join(dir, 'gebco_2024_n47.0_s34.5_w135.0_e152.0.asc')
+    topo_fname = os.path.join(dir, 'GEBCOIceTopo.asc')
     # #output file needed to be joined to the directory, otherwise was put in different directory
-    topotools.swapheader(topo_fname, os.path.join(dir, 'curr_topo.tt3')) 
+    topotools.swapheader(topo_fname, os.path.join(dir, 'new_topo.tt3')) 
   
-    topo_fname = 'curr_topo.tt3'
+    topo_fname = 'new_topo.tt3'
     topo_path = os.path.join(dir, topo_fname)
     topo = topotools.Topography(topo_path, topo_type=3)
     print("The extent of the data in longitude and latitude: ")
@@ -88,7 +89,7 @@ def make_dtopo(makeplots=False):
             node_list = [node1,node2,node3]
             subfault0.slip = rupture_parameters[j,0] #all dip slip
             subfault0.rake = fault_mesh[j,9]
-            subfault0.set_corners(node_list,projection_zone='10')
+            subfault0.set_corners(node_list, projection_zone='10')
             fault0.subfaults.append(subfault0)
 
 
@@ -136,7 +137,7 @@ def make_dtopo(makeplots=False):
             node3 = fault_mesh[j,6:9].tolist()
             node_list = [node1,node2,node3]
 
-            subfault0.set_corners(node_list,projection_zone='10')
+            subfault0.set_corners(node_list, projection_zone='10')
             subfault0.rupture_time = rupture_parameters[j,2]
             subfault0.rise_time = rupture_parameters[j,1]
             subfault0.rake = fault_mesh[j,9]
