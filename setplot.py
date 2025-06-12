@@ -94,12 +94,12 @@ def setplot(plotdata=None):
     #plotitem.plot_var = geoplot.surface
     plotitem.plot_var = geoplot.surface_or_depth
     plotitem.pcolor_cmap = geoplot.tsunami_colormap
-    plotitem.pcolor_cmin = -0.2
-    plotitem.pcolor_cmax = 0.2
+    plotitem.pcolor_cmin = -0.3
+    plotitem.pcolor_cmax = 0.3
     plotitem.add_colorbar = True
     plotitem.colorbar_shrink = 0.8
     plotitem.colorbar_extend = 'both'
-    plotitem.amr_celledges_show = [0,0,0]
+    plotitem.amr_celledges_show = [0,0,0,0,0]
     plotitem.patchedges_show = 1
 
     # Land
@@ -109,10 +109,10 @@ def setplot(plotdata=None):
     plotitem.pcolor_cmin = 0.0
     plotitem.pcolor_cmax = 100.0
     plotitem.add_colorbar = False
-    plotitem.amr_celledges_show = [1,1,0]
+    plotitem.amr_celledges_show = [1,1,0,0,0]
     plotitem.patchedges_show = 1
-    plotaxes.xlimits = [140,148]
-    plotaxes.ylimits = [39,45]
+    plotaxes.xlimits = [139,148]
+    plotaxes.ylimits = [38,46]
 
     # add contour lines of bathy if desired:
     plotitem = plotaxes.new_plotitem(plot_type='2d_contour')
@@ -121,7 +121,7 @@ def setplot(plotdata=None):
     plotitem.contour_levels = linspace(-3000,-3000,1)
     plotitem.amr_contour_colors = ['y']  # color on each level
     plotitem.kwargs = {'linestyles':'solid','linewidths':2}
-    plotitem.amr_contour_show = [1,0,0]  
+    plotitem.amr_contour_show = [1,0,0,0,0]  
     plotitem.celledges_show = 0
     plotitem.patchedges_show = 0
 
@@ -175,10 +175,10 @@ def setplot(plotdata=None):
     #plotitem.plot_var = geoplot.surface
     plotitem.plot_var = geoplot.surface_or_depth
     plotitem.pcolor_cmap = geoplot.tsunami_colormap
-    plotitem.pcolor_cmin = -0.2
-    plotitem.pcolor_cmax = 0.2
+    plotitem.pcolor_cmin = -0.3
+    plotitem.pcolor_cmax = 0.3
     plotitem.add_colorbar = True
-    plotitem.amr_celledges_show = [1,1,0]
+    plotitem.amr_celledges_show = [1,1,0,0,0]
     plotitem.patchedges_show = 1
 
     # Land
@@ -188,17 +188,17 @@ def setplot(plotdata=None):
     plotitem.pcolor_cmin = 0.0
     plotitem.pcolor_cmax = 100.0
     plotitem.add_colorbar = False
-    plotitem.amr_celledges_show = [1,1,0]
+    plotitem.amr_celledges_show = [1,1,0,0,0]
     plotitem.patchedges_show = 1
 
-    plotfigure = plotdata.new_plotfigure(name='Mabiro Gauge Location', figno=1)
+    plotfigure = plotdata.new_plotfigure(name='Kushiro Gauge Location', figno=2)
 
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes('pcolor')
     plotaxes.title = 'Surface'
     plotaxes.scaled = True
     plotaxes.afteraxes = addgauges2
-    plotaxes.xlimits = [144.5,145.5]
+    plotaxes.xlimits = [144,145]
     plotaxes.ylimits = [42.5,43.5]
 
     # Water
@@ -206,10 +206,10 @@ def setplot(plotdata=None):
     #plotitem.plot_var = geoplot.surface
     plotitem.plot_var = geoplot.surface_or_depth
     plotitem.pcolor_cmap = geoplot.tsunami_colormap
-    plotitem.pcolor_cmin = -0.2
-    plotitem.pcolor_cmax = 0.2
+    plotitem.pcolor_cmin = -0.3
+    plotitem.pcolor_cmax = 0.3
     plotitem.add_colorbar = True
-    plotitem.amr_celledges_show = [1,1,0]
+    plotitem.amr_celledges_show = [1,1,0,0,0]
     plotitem.patchedges_show = 1
 
     # Land
@@ -219,7 +219,7 @@ def setplot(plotdata=None):
     plotitem.pcolor_cmin = 0.0
     plotitem.pcolor_cmax = 100.0
     plotitem.add_colorbar = False
-    plotitem.amr_celledges_show = [1,1,0]
+    plotitem.amr_celledges_show = [1,1,0,0,0]
     plotitem.patchedges_show = 1
 
 
@@ -233,7 +233,7 @@ def setplot(plotdata=None):
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
     plotaxes.time_scale = 1/3600.  # convert to hours
-    plotaxes.xlimits = [0, 9]
+    plotaxes.xlimits = [0, 4]
     plotaxes.ylimits = [-3, 3]
     plotaxes.title = 'Surface'
     plotaxes.title_fontsize = 15

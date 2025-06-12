@@ -17,7 +17,7 @@ except:
     raise Exception("*** Must first set CLAW enviornment variable")
 
 # Scratch directory for storing topo and dtopo files:
-dir = os.path.join(CLAW, 'geoclaw/examples/hokkaido')
+dir = os.path.join(CLAW, 'geoclaw/examples/hokkaido/scratch')
 
 
 #------------------------------
@@ -74,7 +74,7 @@ def setrun(claw_pkg='geoclaw'):
     clawdata.num_dim = num_dim
 
     # Lower and upper edge of computational domain:
-    clawdata.lower[0] = 140.0      # west longitude
+    clawdata.lower[0] = 138.0      # west longitude
     clawdata.upper[0] = 148.0      # east longitude
 
     clawdata.lower[1] = 38         # south latitude
@@ -83,8 +83,8 @@ def setrun(claw_pkg='geoclaw'):
 
 
     # Number of grid cells: Coarsest grid
-    clawdata.num_cells[0] = 30 # mx
-    clawdata.num_cells[1] = 30 # my
+    clawdata.num_cells[0] = 5 # mx
+    clawdata.num_cells[1] = 6 # my
 
     # ---------------
     # Size of system:
@@ -134,7 +134,7 @@ def setrun(claw_pkg='geoclaw'):
 
     elif clawdata.output_style == 2:
         # Specify a list of output times.
-        clawdata.output_times = [0., 514.28571429, 1028.57142857, 1542.85714286, 2057.14285714, 2571.42857143, 3085.71428571, 3600., 4114.28571429, 4628.57142857, 5142.85714286, 5657.14285714, 6171.42857143, 6685.71428571, 7200.]
+        clawdata.output_times = [0., 514.28571429]
 
     elif clawdata.output_style == 3:
         # Output every iout timesteps with a total of ntot time steps:
@@ -158,7 +158,7 @@ def setrun(claw_pkg='geoclaw'):
     # The current t, dt, and cfl will be printed every time step
     # at AMR levels <= verbosity.  Set verbosity = 0 for no printing.
     #   (E.g. verbosity == 2 means print only on levels 1 and 2.)
-    clawdata.verbosity = 1
+    clawdata.verbosity = 4
 
 
 
@@ -287,12 +287,13 @@ def setrun(claw_pkg='geoclaw'):
     amrdata.max1d = 60
 
     # max number of refinement levels:
-    amrdata.amr_levels_max = 3
+    amrdata.amr_levels_max = 5
 
     # List of refinement ratios at each level (length at least mxnest-1)
-    amrdata.refinement_ratios_x = [6,8]
-    amrdata.refinement_ratios_y = [6,8]
-    amrdata.refinement_ratios_t = [6,8]
+    # 2 degree, 24', 4', 1', 10", 1/3"
+    amrdata.refinement_ratios_x = [5, 6, 4, 6, 30]
+    amrdata.refinement_ratios_y = [5, 6, 4, 6, 30]
+    amrdata.refinement_ratios_t = [5, 6, 4, 6, 30]
 
 
     # Specify type of each aux variable in amrdata.auxtype.
@@ -344,21 +345,24 @@ def setrun(claw_pkg='geoclaw'):
     rundata.regiondata.regions = []
     # to specify regions of refinement append lines of the form
     #  [minlevel,maxlevel,t1,t2,x1,x2,y1,y2]
-    
+    inf = 1e9 
+    regions = rundata.regiondata.regions
+
     if 1:
-        rundata.regiondata.regions.append([1, 1, 0., 1e9, -180,180,-90,90])
-        rundata.regiondata.regions.append([1, 3, 0., 1e9, 141, 146, 41, 43])
-        rundata.regiondata.regions.append([3, 3, 0., 1e9, 142, 144, 41.5, 42.5])
-        rundata.regiondata.regions.append([3, 3, 0., 1e9, 144.5, 145.5, 42.5, 43.5])
-        #rundata.regiondata.regions.append([3, 3, 0., 1e9, 142, 144, 41, 43])
+        regions.append([1, 1, 0., inf, -180,180,-90,90]) # more than domain
+        regions.append([3, 5, 0., inf, 140.5, 146, 40, 43]) # area of fault slip
+        regions.append([1, 3, 0., inf, 138, 146, 41, 43]) # Domain
+        regions.append([4, 5, 0., inf, 142.6, 143, 41.9, 42.4]) # urakawa gauge location
+        regions.append([4, 5, 0., inf, 144., 145, 42.7, 43.15]) # kushiro gauge location
+        #regions.append([3, 3, 0., inf, 142, 144, 41, 43])
 
     # ---------------
     # Gauges:
     # ---------------
     rundata.gaugedata.gauges = []
     # # for gauges append lines of the form  [gaugeno, x, y, t1, t2]
-    rundata.gaugedata.gauges.append([129, 142.755637, 42.148995, 0., 1.e10]) # urakawa
-    rundata.gaugedata.gauges.append([111, 144.897712, 42.978294, 0., 1.e10]) # mabiro
+    rundata.gaugedata.gauges.append([129, 142.755637, 42.138995, 0., 1.e10]) # urakawa
+    rundata.gaugedata.gauges.append([111, 144.37, 42.9, 0., 1.e10]) # Kushiro
     
 
     return rundata

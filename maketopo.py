@@ -26,7 +26,7 @@ except:
     raise Exception("*** Must first set CLAW enviornment variable")
 
 # Scratch directory for storing topo and dtopo files:
-dir = os.path.join(CLAW, 'geoclaw/examples/hokkaido')
+dir = os.path.join(CLAW, 'geoclaw/examples/hokkaido/scratch')
 
 def get_topo(makeplots=False):
     """
@@ -152,15 +152,14 @@ def make_dtopo(makeplots=False):
         else:
             print("Using Okada model to create dtopo file")
             
-            points_per_degree = 60  # 1 minute resolution
-            dx = 1./points_per_degree
-            x,y = fault0.create_dtopo_xy(dx)
+            x,y = fault0.create_dtopo_xy(dx = 4/60.) #what is dx?
             print('Will create dtopo on arrays of shape %i by %i' % (len(x),len(y)))
             tfinal = max([subfault1.rupture_time + subfault1.rise_time for subfault1 in fault0.subfaults])
             times0 = np.linspace(0.,tfinal,100)
             dtopo0 = fault0.create_dtopography(x,y,times=times0,verbose=True);
             dtopo0.write(dtopo_fname, dtopo_type=3)
             print('Created %s, with dynamic rupture of a Mw %.2f event' % (dtopo_fname, fault0.Mw()))
+
 
 
     if makeplots:
