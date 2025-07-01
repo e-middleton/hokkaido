@@ -26,7 +26,7 @@ except:
     raise Exception("*** Must first set CLAW enviornment variable")
 
 # Scratch directory for storing topo and dtopo files:
-dir = os.path.join(CLAW, 'geoclaw/examples/hokkaido/scratch')
+dir = os.path.join(CLAW, 'geoclaw/examples/hidaka/scratch')
 
 def get_topo(makeplots=False):
     """
@@ -37,12 +37,17 @@ def get_topo(makeplots=False):
     # topography file
     #topo_fname = os.path.join(dir, 'gebco_2024_n47.0_s34.5_w135.0_e152.0.asc')
     topo_fname = os.path.join(dir, 'GEBCOIceTopo.asc')
+    #topo_fname2 = os.path.join(dir, 'hokkaido_c_AW3D30.asc')
+
     # #output file needed to be joined to the directory, otherwise was put in different directory
     topotools.swapheader(topo_fname, os.path.join(dir, 'new_topo.tt3')) 
+    #topotools.swapheader(topo_fname2, os.path.join(dir, 'test_topo.tt3'))
   
     topo_fname = 'new_topo.tt3'
     topo_path = os.path.join(dir, topo_fname)
+
     topo = topotools.Topography(topo_path, topo_type=3)
+  
     print("The extent of the data in longitude and latitude: ")
     print(topo.extent)
 
@@ -63,20 +68,20 @@ def make_dtopo(makeplots=False):
     from clawpack.geoclaw import dtopotools
     import numpy
 
-    dtopo_fname = os.path.join(dir, "tok_dtopo.tt3")
+    dtopo_fname = os.path.join(dir, "urakawa_dtopo.tt3")
 
     # Specify subfault parameters 
 
     #Files in directory read in
-    fault_geometry_file = os.path.join(dir, 'tok_coords.csv')
-    rupture_file = os.path.join(dir, 'tok_rupt_param.csv')
+    fault_geometry_file = os.path.join(dir, 'urakawa_1982/fault_model_1982.csv')
+    rupture_file = os.path.join(dir, 'urakawa_1982/rupt_param_1982.csv')
 
     fault_mesh = np.loadtxt(fault_geometry_file, delimiter=",", skiprows=1) #path, comma separated values, first row is a header
     fault_mesh[:,[2,5,8]] = 1e3*abs(fault_mesh[:,[2,5,8]]) #array slicing accesses depth element, changing it to be positive meters
     rupture_parameters = np.loadtxt(rupture_file, delimiter=",", skiprows=1) # skip header
 
     ### FOR A STATIC, SINGLE TIME RUPTURE ###
-    if 0:
+    if 1:
         fault0 = dtopotools.Fault() #create object
         fault0.subfaults = [] #initialize empty list
         nsubfaults = fault_mesh.shape[0]
@@ -87,8 +92,8 @@ def make_dtopo(makeplots=False):
             node2 = fault_mesh[j,3:6].tolist()
             node3 = fault_mesh[j,6:9].tolist()
             node_list = [node1,node2,node3]
-            subfault0.slip = rupture_parameters[j,0] #all dip slip
-            subfault0.rake = fault_mesh[j,9]
+            subfault0.slip = rupture_parameters[j,1] #all dip slip
+            subfault0.rake = fault_mesh[j,11] # rake is a single value added in csv writing section of fault_disp
             subfault0.set_corners(node_list, projection_zone='10')
             fault0.subfaults.append(subfault0)
 
@@ -96,11 +101,13 @@ def make_dtopo(makeplots=False):
         if os.path.exists(dtopo_fname):
             print("*** Not regenerating dtopo file (already exists): %s" \
                         % dtopo_fname)
+            print('Created %s, with static rupture of a Mw %.2f event' % ("urakawa-oki", fault0.Mw()))
+
         else:
             print("Using Okada model to create dtopo file")
             
             # specify extent of seafloor deformation (?)
-            xlower = 141.25
+            xlower = 140
             xupper = 145
             ylower = 41
             yupper = 42.5
@@ -118,9 +125,11 @@ def make_dtopo(makeplots=False):
 
             dtopo = fault0.create_dtopography(x,y,times=[1.], verbose=False)
             dtopo.write(dtopo_fname, dtopo_type=3)
+            print('Created %s, with dynamic rupture of a Mw %.2f event' % ("urakawa-oki", fault0.Mw()))
+            
         
     ### FOR A MULTI TIME RUPTURE ###
-    if 1:
+    if 0:
 
         # create fault object
         fault0 = dtopotools.Fault()

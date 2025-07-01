@@ -1,4 +1,3 @@
-
 """ 
 Set up the plot figures, axes, and items to be done for each frame.
 
@@ -45,15 +44,20 @@ def setplot(plotdata=None):
         gaugetools.plot_gauge_locations(current_data.plotdata, \
              gaugenos='all', format_string='ko', add_labels=True)
     
-    def addgauges1(current_data):
+    def addgauges1(current_data): # urakawa
         from clawpack.visclaw import gaugetools
         gaugetools.plot_gauge_locations(current_data.plotdata, \
              gaugenos=[129], format_string='ko', add_labels=True)
         
-    def addgauges2(current_data):
+    def addgauges2(current_data): # erimo
         from clawpack.visclaw import gaugetools
         gaugetools.plot_gauge_locations(current_data.plotdata, \
-        gaugenos=[111], format_string='ko', add_labels=True)
+        gaugenos=[112], format_string='ko', add_labels=True)
+
+    def addgauges3(current_data): # tomakomai
+        from clawpack.visclaw import gaugetools
+        gaugetools.plot_gauge_locations(current_data.plotdata, \
+        gaugenos=[113], format_string='ko', add_labels=True)
         
     def fixup(current_data):
         import pylab
@@ -94,13 +98,13 @@ def setplot(plotdata=None):
     #plotitem.plot_var = geoplot.surface
     plotitem.plot_var = geoplot.surface_or_depth
     plotitem.pcolor_cmap = geoplot.tsunami_colormap
-    plotitem.pcolor_cmin = -0.3
-    plotitem.pcolor_cmax = 0.3
+    plotitem.pcolor_cmin = -0.2
+    plotitem.pcolor_cmax = 0.2
     plotitem.add_colorbar = True
     plotitem.colorbar_shrink = 0.8
     plotitem.colorbar_extend = 'both'
     plotitem.amr_celledges_show = [0,0,0,0,0]
-    plotitem.patchedges_show = 1
+    plotitem.patchedges_show = 0
 
     # Land
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
@@ -109,10 +113,10 @@ def setplot(plotdata=None):
     plotitem.pcolor_cmin = 0.0
     plotitem.pcolor_cmax = 100.0
     plotitem.add_colorbar = False
-    plotitem.amr_celledges_show = [1,1,0,0,0]
-    plotitem.patchedges_show = 1
-    plotaxes.xlimits = [139,148]
-    plotaxes.ylimits = [38,46]
+    plotitem.amr_celledges_show = [0,0,0,0,0]
+    plotitem.patchedges_show = 0
+    plotaxes.xlimits = [140,148]
+    plotaxes.ylimits = [40,45]
 
     # add contour lines of bathy if desired:
     plotitem = plotaxes.new_plotitem(plot_type='2d_contour')
@@ -121,44 +125,10 @@ def setplot(plotdata=None):
     plotitem.contour_levels = linspace(-3000,-3000,1)
     plotitem.amr_contour_colors = ['y']  # color on each level
     plotitem.kwargs = {'linestyles':'solid','linewidths':2}
-    plotitem.amr_contour_show = [1,0,0,0,0]  
+    plotitem.amr_contour_show = [0,0,0,0,0]  
     plotitem.celledges_show = 0
     plotitem.patchedges_show = 0
 
-
-    #-----------------------------------------
-    # Figure for zoom near coastline
-    #-----------------------------------------
-    # plotfigure = plotdata.new_plotfigure(name='Hokkaido coast', figno=1)
-
-    # # Set up for axes in this figure:
-    # plotaxes = plotfigure.new_plotaxes('pcolor')
-    # plotaxes.title = 'Surface'
-    # plotaxes.scaled = True
-    # plotaxes.afteraxes = fixup
-    # plotaxes.xlimits = [141.5,144]
-    # plotaxes.ylimits = [41,42.5]
-
-    # # Water
-    # plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
-    # #plotitem.plot_var = geoplot.surface
-    # plotitem.plot_var = geoplot.surface_or_depth
-    # plotitem.pcolor_cmap = geoplot.tsunami_colormap
-    # plotitem.pcolor_cmin = -0.2
-    # plotitem.pcolor_cmax = 0.2
-    # plotitem.add_colorbar = True
-    # plotitem.amr_celledges_show = [1,1,0]
-    # plotitem.patchedges_show = 1
-
-    # # Land
-    # plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
-    # plotitem.plot_var = geoplot.land
-    # plotitem.pcolor_cmap = geoplot.land_colors
-    # plotitem.pcolor_cmin = 0.0
-    # plotitem.pcolor_cmax = 100.0
-    # plotitem.add_colorbar = False
-    # plotitem.amr_celledges_show = [1,1,0]
-    # plotitem.patchedges_show = 1
 
     plotfigure = plotdata.new_plotfigure(name='Urakawa Gauge Location', figno=1)
 
@@ -168,18 +138,18 @@ def setplot(plotdata=None):
     plotaxes.scaled = True
     plotaxes.afteraxes = addgauges1
     plotaxes.xlimits = [142,144]
-    plotaxes.ylimits = [41.5,42.5]
+    plotaxes.ylimits = [41.5,43]
 
     # Water
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     #plotitem.plot_var = geoplot.surface
     plotitem.plot_var = geoplot.surface_or_depth
     plotitem.pcolor_cmap = geoplot.tsunami_colormap
-    plotitem.pcolor_cmin = -0.3
-    plotitem.pcolor_cmax = 0.3
+    plotitem.pcolor_cmin = -0.2
+    plotitem.pcolor_cmax = 0.2
     plotitem.add_colorbar = True
-    plotitem.amr_celledges_show = [1,1,0,0,0]
-    plotitem.patchedges_show = 1
+    plotitem.amr_celledges_show = [0,0,0,0,0]
+    plotitem.patchedges_show = 0
 
     # Land
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
@@ -188,29 +158,29 @@ def setplot(plotdata=None):
     plotitem.pcolor_cmin = 0.0
     plotitem.pcolor_cmax = 100.0
     plotitem.add_colorbar = False
-    plotitem.amr_celledges_show = [1,1,0,0,0]
-    plotitem.patchedges_show = 1
+    plotitem.amr_celledges_show = [0,0,0,0,0]
+    plotitem.patchedges_show = 0
 
-    plotfigure = plotdata.new_plotfigure(name='Kushiro Gauge Location', figno=2)
+    plotfigure = plotdata.new_plotfigure(name='Erimo Port Location', figno=2)
 
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes('pcolor')
     plotaxes.title = 'Surface'
     plotaxes.scaled = True
     plotaxes.afteraxes = addgauges2
-    plotaxes.xlimits = [144,145]
-    plotaxes.ylimits = [42.5,43.5]
+    plotaxes.xlimits = [142,144]
+    plotaxes.ylimits = [41.5,43]
 
     # Water
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     #plotitem.plot_var = geoplot.surface
     plotitem.plot_var = geoplot.surface_or_depth
     plotitem.pcolor_cmap = geoplot.tsunami_colormap
-    plotitem.pcolor_cmin = -0.3
-    plotitem.pcolor_cmax = 0.3
+    plotitem.pcolor_cmin = -0.2
+    plotitem.pcolor_cmax = 0.2
     plotitem.add_colorbar = True
-    plotitem.amr_celledges_show = [1,1,0,0,0]
-    plotitem.patchedges_show = 1
+    plotitem.amr_celledges_show = [0,0,0,0,0]
+    plotitem.patchedges_show = 0
 
     # Land
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
@@ -219,9 +189,41 @@ def setplot(plotdata=None):
     plotitem.pcolor_cmin = 0.0
     plotitem.pcolor_cmax = 100.0
     plotitem.add_colorbar = False
-    plotitem.amr_celledges_show = [1,1,0,0,0]
-    plotitem.patchedges_show = 1
+    plotitem.amr_celledges_show = [0,0,0,0,0]
+    plotitem.patchedges_show = 0
 
+# TOMAKOMAI PLOT 141.613420, 42.614828 
+
+    plotfigure = plotdata.new_plotfigure(name='Tomakomai Port Location', figno=3)
+
+    # Set up for axes in this figure:
+    plotaxes = plotfigure.new_plotaxes('pcolor')
+    plotaxes.title = 'Surface'
+    plotaxes.scaled = True
+    plotaxes.afteraxes = addgauges3
+    plotaxes.xlimits = [141,142.5]
+    plotaxes.ylimits = [41.75,43.25]
+
+    # Water
+    plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
+    #plotitem.plot_var = geoplot.surface
+    plotitem.plot_var = geoplot.surface_or_depth
+    plotitem.pcolor_cmap = geoplot.tsunami_colormap
+    plotitem.pcolor_cmin = -0.2
+    plotitem.pcolor_cmax = 0.2
+    plotitem.add_colorbar = True
+    plotitem.amr_celledges_show = [0,0,0,0,0]
+    plotitem.patchedges_show = 0
+
+    # Land
+    plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
+    plotitem.plot_var = geoplot.land
+    plotitem.pcolor_cmap = geoplot.land_colors
+    plotitem.pcolor_cmin = 0.0
+    plotitem.pcolor_cmax = 100.0
+    plotitem.add_colorbar = False
+    plotitem.amr_celledges_show = [0,0,0,0,0]
+    plotitem.patchedges_show = 0
 
     #-----------------------------------------
     # Figures for gauges
@@ -257,7 +259,7 @@ def setplot(plotdata=None):
     plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
     plotitem.plot_var = 3  # eta
     plotitem.plotstyle = 'b-'
-    plotitem.kwargs = {'linewidth':1.8}
+    plotitem.kwargs = {'linewidth':2}
 
 
     # Plot topo as green curve:
